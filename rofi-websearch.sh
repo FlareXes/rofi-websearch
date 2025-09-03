@@ -8,7 +8,6 @@ touch "$HIST_FILE"
 # --- Engine Definitions ---
 # Key = engine name (shown in rofi)
 # Value = search URL (with %s placeholder for query)
-# To disable an engine, just comment it out.
 declare -A ENGINES=(
     # General search
     ["Google"]="https://www.google.com/search?q=%s"
@@ -56,7 +55,7 @@ ENGINE_ORDER=(
     "GitHub"
     "Amazon"
     "Unsplash"
-    # "Google Maps"
+    "Google Maps"
 )
 
 
