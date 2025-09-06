@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 
-BROWSER="${BROWSER:-librewolf}"   # fallback browser
+BROWSER="xdg-open"
 HIST_FILE="${XDG_CACHE_HOME:-$HOME/.cache}/rofi-websearch-history"
 mkdir -p "$(dirname "$HIST_FILE")"
 touch "$HIST_FILE"
@@ -43,7 +43,7 @@ declare -A ENGINES=(
 )
 
 # Enable engine and maintain ordered list of engines (controls display order in rofi)
-ENGINE_ORDER=(
+ENABLE_ENGINE=(
     "YouTube"
     "Google"
     "Bing"
@@ -58,11 +58,32 @@ ENGINE_ORDER=(
     "Google Maps"
 )
 
+# --- Embedded Rofi Theme ---
+ROFI_THEME='
+window {
+    width: 40%;
+}
+
+listview {
+    lines: 8;
+    columns: 2;
+    spacing: 5;
+    cycle: false;
+}
+
+element {
+    padding: 2px;
+}
+
+element-text {
+    horizontal-align: 0.25;
+}
+'
 
 # --- Functions ---
 
 choose_engine() {
-    printf "%s\n" "${ENGINE_ORDER[@]}" | rofi -dmenu -i -p "Search Engine"
+    printf "%s\n" "${ENABLE_ENGINE[@]}" | rofi -dmenu -i -theme-str "$ROFI_THEME" -p "Search Engine"
 }
 
 choose_query() {
