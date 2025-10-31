@@ -40,8 +40,45 @@ declare -A BANGS=(
     ["copilot"]="https://copilot.microsoft.com/?q=%s"
 )
 
+# --- Dependency check ---
+check_dependencies() {
+    local deps=("xdg-open")
+    local launcher=""
+
+    # Choose launcher dynamically
+    if command -v rofi >/dev/null 2>&1; then
+        launcher="rofi"
+    elif command -v walker >/dev/null 2>&1; then
+        launcher="walker"
+    fi
+
+    if [[ -z "$launcher" ]]; then
+        echo "❌ Error: Neither 'rofi' nor 'walker' found in PATH." >&2
+        exit 1
+    fi
+
+    # Verify other required binaries
+    for dep in "${deps[@]}"; do
+        if ! command -v "$dep" >/dev/null 2>&1; then
+            echo "❌ Error: Missing dependency '$dep'." >&2
+            exit 1
+        fi
+    done
+
+    echo "$launcher"
+}
+
+# --- Query chooser ---
 choose_query() {
-    rofi -dmenu -i -theme-str "$ROFI_THEME" -p "Bang"
+    local launcher="$1"
+    case "$launcher" in
+        rofi)
+            rofi -dmenu -i -theme-str "$ROFI_THEME" -p "Bang"
+            ;;
+        walker)
+            walker --dmenu -I -p "Bang"
+            ;;
+    esac
 }
 
 urlencode() {
@@ -89,7 +126,8 @@ open_in_browser() {
 }
 
 # --- Main Flow ---
-query=$(choose_query)
+launcher=$(check_dependencies)
+query=$(choose_query "$launcher")
 [ -z "$query" ] && exit 0
 
 open_in_browser "$query"
