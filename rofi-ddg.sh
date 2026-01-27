@@ -7,26 +7,17 @@
 #   - Else → forward query to DuckDuckGo bangs (!prefix query).
 #
 # Common prefixes:
-#   g      → Google Search
-#   ddg    → DuckDuckGo Search
+#   g      → Google
 #   yt     → YouTube
-#   gh     → GitHub
-#   so     → StackOverflow
-#   amz    → Amazon
-#   ebay   → eBay
-#   gm     → Google Maps
-#   img    → Google Images
 #   sp     → Startpage
+#   ddg    → DuckDuckGo
+#   amz    → Amazon
 #
 # Full bang list: https://duckduckgo.com/bang
 
 BROWSER="xdg-open"
 
 ROFI_THEME='
-window {
-    width: 40%;
-}
-
 listview {
     enabled: false;
 }
@@ -35,50 +26,26 @@ listview {
 # --- Local bang overrides (prefix → URL template with %s) ---
 declare -A BANGS=(
     # Custom (not supported by DDG)
+    ["g"]="www.google.com/search?q=%s"
+    ["y"]="https://www.youtube.com/results?search_query=%s"
     ["gpt"]="https://chat.openai.com/?q=%s"
-    ["ppx"]="https://www.perplexity.ai/search?q=%s"
-    ["copilot"]="https://copilot.microsoft.com/?q=%s"
 )
 
 # --- Dependency check ---
 check_dependencies() {
-    local deps=("xdg-open")
-    local launcher=""
+    local deps=("xdg-open" "rofi")
 
-    # Choose launcher dynamically
-    if command -v rofi >/dev/null 2>&1; then
-        launcher="rofi"
-    elif command -v walker >/dev/null 2>&1; then
-        launcher="walker"
-    fi
-
-    if [[ -z "$launcher" ]]; then
-        echo "❌ Error: Neither 'rofi' nor 'walker' found in PATH." >&2
-        exit 1
-    fi
-
-    # Verify other required binaries
     for dep in "${deps[@]}"; do
         if ! command -v "$dep" >/dev/null 2>&1; then
             echo "❌ Error: Missing dependency '$dep'." >&2
             exit 1
         fi
     done
-
-    echo "$launcher"
 }
 
 # --- Query chooser ---
 choose_query() {
-    local launcher="$1"
-    case "$launcher" in
-        rofi)
-            rofi -dmenu -i -theme-str "$ROFI_THEME" -p "Bang"
-            ;;
-        walker)
-            walker --dmenu -I -p "Bang"
-            ;;
-    esac
+    rofi -dmenu -i -theme-str "$ROFI_THEME" -p "Search" < /dev/null
 }
 
 urlencode() {
@@ -109,16 +76,17 @@ open_in_browser() {
 
     if [[ -n "${BANGS[$prefix]}" ]]; then
         # Local custom mapping
-        local encoded=$(urlencode "$rest")
+        local encoded
+        encoded=$(urlencode "$rest")
         local url="${BANGS[$prefix]}"
         url="${url//%s/$encoded}"
     else
         # Fallback to DuckDuckGo bangs
-        # prepend "!" only if user didn't type one
         if [[ "$query" != "!"* ]]; then
-                query="!$query"
+            query="!$query"
         fi
-        local encoded=$(urlencode "$query")
+        local encoded
+        encoded=$(urlencode "$query")
         local url="https://duckduckgo.com/?q=${encoded}"
     fi
 
@@ -126,8 +94,8 @@ open_in_browser() {
 }
 
 # --- Main Flow ---
-launcher=$(check_dependencies)
-query=$(choose_query "$launcher")
+check_dependencies
+query=$(choose_query)
 [ -z "$query" ] && exit 0
 
 open_in_browser "$query"
