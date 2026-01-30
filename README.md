@@ -64,7 +64,7 @@ By default, the script uses `xdg-open`.
 
 You may edit the script to change browser:
 
-````bash
+```bash
 BROWSER="firefox"
 ```
 
