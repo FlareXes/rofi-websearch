@@ -26,7 +26,7 @@ listview {
 # --- Local bang overrides (prefix → URL template with %s) ---
 declare -A BANGS=(
     # Custom (not supported by DDG)
-    ["g"]="www.google.com/search?q=%s"
+    ["g"]="https://www.google.com/search?q=%s"
     ["y"]="https://www.youtube.com/results?search_query=%s"
     ["gpt"]="https://chat.openai.com/?q=%s"
 )
