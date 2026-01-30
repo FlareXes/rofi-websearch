@@ -64,9 +64,7 @@ You may edit the script to change browser:
 
 ````bash
 BROWSER="firefox"
-```bash
-export BROWSER=firefox
-````
+```
 
 ### Add custom or override bangs
 
