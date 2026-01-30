@@ -1,73 +1,97 @@
-# rofi-websearch 
+# Rofi + DuckDuckGo
 
-A tiny **Rofi-powered web search launcher** for people too cool to open a browser first. Pick your search engine, type (or reuse) your query, and boom — results in your browser.
+A minimal **Rofi-based web search launcher** that uses **DuckDuckGo bangs** with optional **local overrides**. It provides a single prompt for fast searches without menus, history, or persistent state.
 
-## ✨ Features
-- 🔍 **Multi-engine**: Google, DuckDuckGo, YouTube, Perplexity, GitHub, and more.  
-- 📝 **Search history**: remembers your last 100 queries (because muscle memory is faster than typing).  
-- 🗑️ **Clear history option**: because sometimes you just don’t want “how to fix rm -rf /” saved forever.  
-	- History lives in `$HOME/.cache/rofi-websearch-history` —  in case you want to feel extra smart and nuke it manually.
+## Features
 
-- 🦆 Case-insensitive (no more typing “youtube” instead of “YouTube”).  
-- ⚡ Lightweight: it’s a Bash script, not an electron app.  
+* DuckDuckGo bang support by default
+* Local prefix overrides for custom search engines
+* Single-input workflow
 
-## 🔧 Requirements
-- rofi
-- bash
-- jq (optional, but makes URL encoding less of a hack)  
+## Requirements
 
-## 🚀 Installation
-Clone it, make it executable, and you’re good:
+* rofi
+* jq (optional, for URL encoding)
+
+## Installation
 
 ```bash
-git clone https://github.com/flarexes/rofi-websearch.git
-cd rofi-websearch
-chmod +x rofi-websearch.sh
-````
-
-(Optional) yeet it into your `$PATH`:
-
-```bash
-sudo cp rofi-websearch.sh /usr/local/bin/rofi-websearch
+git clone https://github.com/FlareXes/rofi-ddg.git
+cd rofi-ddg
+chmod +x rofi-ddg.sh
 ```
 
-## 💻 Usage
-
-Launch with:
+(Optional) Install system-wide:
 
 ```bash
-rofi-websearch
+sudo cp rofi-ddg.sh /usr/local/bin/rofi-ddg
 ```
 
-1. Pick a search engine.
-2. Enter your query (or pick from history if you’re lazy).
-3. Browser opens → you pretend you’re a productivity wizard.
+## Usage
 
-**To clear history:** select `🗑 Clear History`. (Don’t worry, it won’t clear your actual browser history — that’s still on *you*.)
+```bash
+rofi-ddg
+```
 
-## ⚙️ Customization
+Enter a search prefix followed by a query.
 
-Want to use Firefox instead of Librewolf? Easy:
+Examples:
 
+* `g linux kernel` → Google search
+* `!y neovim tutorial` → YouTube search
+
+`!` doesn't matter.
+
+## Keybindings
+
+For best experience, bind the script to a key combination according to your desktop environment or window manager. E.g.:
+
+### Hyprland
+
+Add the following to your `hyprland.conf`:
+
+```ini
+bind = SUPER, SPACE, exec, rofi-ddg
+```
+
+## Configuration
+
+### Browser
+
+By default, the script uses `xdg-open`.
+
+You may edit the script to change browser:
+
+````bash
+BROWSER="firefox"
 ```bash
 export BROWSER=firefox
-```
+````
 
-Want to hide some engines? Just comment them out:
+### Add custom or override bangs
+
+Edit the `BANGS` associative array in the script:
 
 ```bash
-["Google"]="https://www.google.com/search?q=%s"
-# ["Vimeo"]="https://vimeo.com/search?q=%s"   # (goodbye Vimeo, nobody will miss you)
+declare -A BANGS=(
+  ["g"]="https://www.google.com/search?q=%s"
+  ["y"]="https://www.youtube.com/results?search_query=%s"
+  ["gpt"]="https://chat.openai.com/?q=%s"
+)
 ```
 
-## 📜 License
+* Keys are prefixes typed in the prompt
+* Values are URL templates
+* `%s` is replaced with the URL-encoded query
+
+*Local overrides take precedence over DuckDuckGo bangs.*
+
+## License
 
 [MIT License](LICENSE).
 
-Basically: steal it, fork it, improve it. Just don’t sell it as “AI-powered web launcher 3000™”.
-
-## 🙌 Credits
+## Credits
 
 I would like to thank:
-- [FlareXes](https://github.com/flarexes) – for brainstorming, prompting, and crazy ideas.
+- [FlareXes](https://github.com/flarexes) – for brainstorming, prompting, and crazy idea.
 - [ChatGPT](https://chat.com) – for actually writing the script and README.md while I drank coffee. ☕
