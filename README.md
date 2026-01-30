@@ -2,14 +2,14 @@
 
 A minimal **Rofi-based web search launcher** that uses **DuckDuckGo bangs** with optional **local overrides**. It provides a single prompt for fast searches without menus, history, or persistent state.
 
-<div style="aspect-ratio:16/10; width:580px;">
-  <iframe
-    src="https://www.youtube-nocookie.com/embed/y6gO3O1In-k?autoplay=1&mute=1&loop=1&playlist=y6gO3O1In-k&controls=1&modestbranding=1&rel=0"
-    style="width:100%; height:100%; border:0;"
-    allow="autoplay; encrypted-media"
-    allowfullscreen>
-  </iframe>
-</div>
+<iframe
+  width="580"
+  height="363"
+  src="https://www.youtube-nocookie.com/embed/y6gO3O1In-k?autoplay=1&mute=1&loop=1&playlist=y6gO3O1In-k&controls=1&modestbranding=1&rel=0"
+  frameborder="0"
+  allow="autoplay; encrypted-media"
+  allowfullscreen>
+</iframe>
 
 ## Features
 
